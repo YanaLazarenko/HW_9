@@ -66,15 +66,16 @@ COMMANDS_EXIT = ['exit', 'quit', 'good bye']
 
 
 def parser(text: str) -> tuple[callable, list]:
-    for comand in COMMANDS.keys():
-        if text.lower().startswith(comand):
-            args = text[len(comand):].strip().split(' ')
-            return comand, args
+    for kwd, command in COMMANDS.items():
+        if text.lower().startswith(kwd):
+            args = text[len(kwd):].strip().split(' ')
+            return command, args
+    return no_comand, []
                 
 
 def main():
     while True:
-        user_input = input(f'Please enter comand:')
+        user_input = input('Please enter comand:')
         if not user_input:
             no_comand()
         elif user_input.lower() in COMMANDS_EXIT:
@@ -83,7 +84,7 @@ def main():
         #     print(f'{user_input} is not a command')
         else:
             comand, args = parser(user_input)
-            result = COMMANDS[comand](*args)
+            result = comand(*args)
             print(result)
 
 
