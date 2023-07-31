@@ -1,4 +1,6 @@
 phone_book = {}
+
+
 def input_error(func):
     def inner_func(*args):
         try:
@@ -20,17 +22,16 @@ def change_phone(*args):
         if args[0] == key:
             phone_book[key] = args[1]
             return key, phone_book[key]
-        else: 
-            raise KeyError
-    
+    raise KeyError
+
 
 @input_error
 def whose_phone(*args):
     for key, value in phone_book.items():
         if args[0] == key:
-            return value 
-        else:
-            raise KeyError 
+            return value
+    raise KeyError
+
 
 @input_error
 def add(*args):
@@ -54,36 +55,35 @@ def no_comand():
 
 
 COMMANDS = {
-            'hello': hello,
-            'add': add,
-            'change': change_phone,
-            'phone': whose_phone,
-            'show all': show_all,
-            'no comands': no_comand,
-            }
+    'hello': hello,
+    'add': add,
+    'change': change_phone,
+    'phone': whose_phone,
+    'show all': show_all,
+    'no comands': no_comand,
+}
 
 COMMANDS_EXIT = ['exit', 'quit', 'good bye']
 
 
 def parser(text: str) -> tuple[callable, list]:
-    for comand in COMMANDS.keys():
-        if text.lower().startswith(comand):
-            args = text[len(comand):].strip().split(' ')
+    for kwd, comand in COMMANDS.items():
+        if text.lower().startswith(kwd):
+            args = text[len(kwd):].strip().split(' ')
             return comand, args
-                
+    return no_comand, []
+
 
 def main():
     while True:
-        user_input = input(f'Please enter comand:')
+        user_input = input('Please enter comand:')
         if not user_input:
             no_comand()
         elif user_input.lower() in COMMANDS_EXIT:
             break
-        # elif user_input.lower() not in COMMANDS.keys():
-        #     print(f'{user_input} is not a command')
         else:
             comand, args = parser(user_input)
-            result = COMMANDS[comand](*args)
+            result = comand(*args)
             print(result)
 
 
